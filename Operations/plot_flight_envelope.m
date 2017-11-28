@@ -18,8 +18,8 @@ if exist('option')==0
     option = 1;
 end
 %% errors messages
-if V_C>V_D
-    error('V_cruise should be smaller of equal to V_dive')
+if V_C>0.8*V_D
+    error('V_cruise should be smaller of equal to 0.8 * V_dive')
 elseif or(or(CL_max<0,WS<0),or(V_C<0,V_D<0))
     error('variables should be larger than 0')
 else
