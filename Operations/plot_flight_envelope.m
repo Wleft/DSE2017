@@ -98,6 +98,9 @@ else
         delta_N = (rho*V.*u*C_L_alpha)/(2*WS); % load change due to gust
         N_gust(1,:) = 1+delta_N;
         N_gust(2,:) = 1-delta_N;
+        if V_B<min(V_A,V_S*sqrt(N_gust(1,2)))
+            error('V_B is too small')
+        end
         GLD_text = cellstr(["B'";"C'";"D'";"G'";"F'";"E'";"V_{B}"]);
         GLD_text_x = [V+dx,V+dx,V_B+1];
         GLD_text_y = [N_gust(1,:)+dy,N_gust(2,:)-dy,0.25];
