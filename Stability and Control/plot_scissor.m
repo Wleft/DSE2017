@@ -2,7 +2,6 @@ function [] = plot_scissor(x_ac,l_h,c,V_h_V,de_da,C_L_h,C_La_h,C_L_Ah,C_La_Ah,C_
 %Plot scissor, plots the scissor plot describing the stability and
 %controllabitiy of and aircraft and can be used to size the tail
 %   Input variables
-% x_cg      Centre of gravity location on MAC
 % x_ac      Aerodynamic centre of the aircraft less tail
 % l_h       Tail arm
 % c         Cord
@@ -15,30 +14,87 @@ function [] = plot_scissor(x_ac,l_h,c,V_h_V,de_da,C_L_h,C_La_h,C_L_Ah,C_La_Ah,C_
 % C_La_Ah   Aircraft less tail lift rate coefficient
 % C_m_ac    Zero Lift pitching moment coefficient of the aircraft without tail
 
-% example input: plot_scissor(0.132,10,2,1,0.336,-0.696,5.797,6.226,6.760,-1.48)
-
+% example inputs:
+% plot_scissor(0.132,10,2,1,0.336,-0.696,3.38,6.226,6.760,-1.48) normal config
+% plot_scissor(0.132,-3,2,1,0,0.696,5.797,3.38,6.760,-1.48) canard config
 
 
 SM = 0.05; %stability margin
 acc = 0.01; %accuracy of plot
-ShS = 0:acc:1; %set surface area ratio vector
+max_Shs = 0.5; %max area ratio for plotting
+ShS = 0:acc:max_Shs; %set surface area ratio vector
 
 % stability curve
-stab_x_cg = x_ac+(C_La_h/C_La_Ah)*(1-de_da)*(ShS)*(l_h/c)*(V_h_V)-SM;
+stab_x_cg = x_ac+(C_La_h/C_La_Ah)*(1-de_da)*(ShS)*(l_h/c)*(V_h_V^2)-SM;
 
 %controllability curve
-cont_x_cg = x_ac-(C_m_ac/C_L_Ah)+(C_L_h/C_L_Ah)*(ShS)*(l_h/c)*(V_h_V);
+cont_x_cg = x_ac-(C_m_ac/C_L_Ah)+(C_L_h/C_L_Ah)*(ShS)*(l_h/c)*(V_h_V^2);
 
-%%
-
-figure
-hold on
-plot(stab_x_cg,ShS)
-plot(cont_x_cg,ShS)
-
-xlabel('x_{cg} / MAC')
-ylabel('S_{h} / S')
-hold off
-
+if and(((C_La_h/C_La_Ah)*(1-de_da)*(l_h/c)*(V_h_V^2))>0,(C_L_h/C_L_Ah)*(l_h/c)*(V_h_V^2)<0) %conventional config
+    %%
+    
+    figure
+    hold on
+    plot(stab_x_cg,ShS,'LineWidth',2)
+    plot(cont_x_cg,ShS,'LineWidth',2)
+    
+    st=area([x_ac-SM max(stab_x_cg)],[0 max_Shs]);
+    st.FaceAlpha = 0.2;
+    st.LineStyle = 'none';
+    st.FaceColor = 'red';
+    
+    st=area([min(cont_x_cg) x_ac-(C_m_ac/C_L_Ah)],[max_Shs 0]);
+    st.FaceAlpha = 0.2;
+    st.LineStyle = 'none';
+    st.FaceColor = 'red';
+    
+    if min(cont_x_cg)>0
+        st=area([0 min(cont_x_cg)],[max_Shs max_Shs]);
+        st.FaceAlpha = 0.2;
+        st.LineStyle = 'none';
+        st.FaceColor = 'red';
+    end
+    
+    legend('Stability','Controllability','Location','Southeast')
+    xlabel('x_{cg} / MAC')
+    ylabel('S_{h} / S')
+    hold off
+    
+else %canard config
+    figure
+    hold on
+    plot(stab_x_cg,ShS,'LineWidth',2)
+    plot(cont_x_cg,ShS,'LineWidth',2)
+    
+    x_min = min([stab_x_cg cont_x_cg]);
+    x_max = max([stab_x_cg cont_x_cg]);
+    
+    st=area([x_min x_max],[max_Shs max_Shs]);
+    st.FaceAlpha = 0.2;
+    st.LineStyle = 'none';
+    st.FaceColor = 'red';
+    
+    st=area([x_min x_ac-SM],[max_Shs 0]);
+    st.FaceAlpha = 1;
+    st.LineStyle = 'none';
+    st.FaceColor = 'white';
+    
+    st=area([min(cont_x_cg) max(cont_x_cg)],[max_Shs 0]);
+    st.FaceAlpha = 0.2;
+    st.LineStyle = 'none';
+    st.FaceColor = 'red';
+    
+    if not(min(cont_x_cg)==x_min)
+        st=area([x_min min(cont_x_cg)],[max_Shs max_Shs]);
+        st.FaceAlpha = 0.2;
+        st.LineStyle = 'none';
+        st.FaceColor = 'red';
+    end
+    
+    legend('Stability','Controllability','Location','Southeast')
+    xlabel('x_{cg} / MAC')
+    ylabel('S_{h} / S')
+    hold off
+end
 end
 
