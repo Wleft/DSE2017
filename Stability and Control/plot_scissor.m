@@ -16,7 +16,7 @@ function [] = plot_scissor(x_ac,l_h,c,V_h_V,de_da,C_L_h,C_La_h,C_L_Ah,C_La_Ah,C_
 
 % example inputs:
 % plot_scissor(0.132,10,2,1,0.336,-0.696,3.38,6.226,6.760,-1.48) normal config
-% plot_scissor(0.132,-3,2,1,0,0.696,5.797,3.38,6.760,-1.48) canard config
+% plot_scissor(0.132,-3,2,1,0,1.3,3,0.9,6,-0.45) canard config
 
 
 SM = 0.05; %stability margin
@@ -35,8 +35,6 @@ if and(((C_La_h/C_La_Ah)*(1-de_da)*(l_h/c)*(V_h_V^2))>0,(C_L_h/C_L_Ah)*(l_h/c)*(
     
     figure
     hold on
-    plot(stab_x_cg,ShS,'LineWidth',2)
-    plot(cont_x_cg,ShS,'LineWidth',2)
     
     st=area([x_ac-SM max(stab_x_cg)],[0 max_Shs]);
     st.FaceAlpha = 0.2;
@@ -55,7 +53,10 @@ if and(((C_La_h/C_La_Ah)*(1-de_da)*(l_h/c)*(V_h_V^2))>0,(C_L_h/C_L_Ah)*(l_h/c)*(
         st.FaceColor = 'red';
     end
     
-    legend('Stability','Controllability','Location','Southeast')
+    stab = plot(stab_x_cg,ShS,'LineWidth',2,'color','b');
+    cont = plot(cont_x_cg,ShS,'LineWidth',2,'color','r');
+    
+    legend([stab,cont],'Stability','Controllability','Location','Southeast')
     xlabel('x_{cg} / MAC')
     ylabel('S_{h} / S')
     hold off
@@ -63,21 +64,26 @@ if and(((C_La_h/C_La_Ah)*(1-de_da)*(l_h/c)*(V_h_V^2))>0,(C_L_h/C_L_Ah)*(l_h/c)*(
 else %canard config
     figure
     hold on
-    plot(stab_x_cg,ShS,'LineWidth',2)
-    plot(cont_x_cg,ShS,'LineWidth',2)
     
     x_min = min([stab_x_cg cont_x_cg]);
     x_max = max([stab_x_cg cont_x_cg]);
     
-    st=area([x_min x_max],[max_Shs max_Shs]);
+    st=area([min(stab_x_cg) x_max],[max_Shs max_Shs]);
     st.FaceAlpha = 0.2;
     st.LineStyle = 'none';
     st.FaceColor = 'red';
     
-    st=area([x_min x_ac-SM],[max_Shs 0]);
+    st=area([min(stab_x_cg) x_ac-SM],[max_Shs 0]);
     st.FaceAlpha = 1;
     st.LineStyle = 'none';
     st.FaceColor = 'white';
+    
+    if not(min(stab_x_cg)==x_min)
+        st=area([x_min min(stab_x_cg)],[max_Shs max_Shs]);
+        st.FaceAlpha = 1;
+        st.LineStyle = 'none';
+        st.FaceColor = 'white';
+    end
     
     st=area([min(cont_x_cg) max(cont_x_cg)],[max_Shs 0]);
     st.FaceAlpha = 0.2;
@@ -91,7 +97,10 @@ else %canard config
         st.FaceColor = 'red';
     end
     
-    legend('Stability','Controllability','Location','Southeast')
+    stab = plot(stab_x_cg,ShS,'LineWidth',2,'color','b');
+    cont = plot(cont_x_cg,ShS,'LineWidth',2,'color','r');
+    
+    legend([stab,cont],'Stability','Controllability','Location','Southeast')
     xlabel('x_{cg} / MAC')
     ylabel('S_{h} / S')
     hold off
