@@ -18,6 +18,7 @@ function [] = plot_scissor(x_ac,l_h,c,V_h_V,de_da,C_L_h,C_La_h,C_L_Ah,C_La_Ah,C_
 % plot_scissor(0.132,10,2,1,0.336,-0.696,3.38,6.226,6.760,-1.48) normal config
 % plot_scissor(0.132,-3,2,1,0,1.3,3,0.9,6,-0.45) canard config
 
+% added comment
 
 SM = 0.05; %stability margin
 acc = 0.01; %accuracy of plot
