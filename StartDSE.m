@@ -9,6 +9,44 @@ raw = GetGoogleSpreadsheet('1IoZBrjcV7A9TBFl9LnCycaRduCVj8CQdqR6YlVuH_FQ');
 isString    = cellfun('isclass', raw, 'char'); % change , to .
 raw(isString) = strrep(raw(isString), ',', '.');
 
-Weights.kg = str2num(char(raw(2:5,2)));
-Weights.N = str2num(char(raw(2:5,4)));
-Weights.text = raw(2:5,1);
+isString    = cellfun('isclass', raw, 'char'); % change ' ' to _
+raw(isString) = strrep(raw(isString), ' ', '_');
+
+isString    = cellfun('isclass', raw, 'char'); % remove *
+raw(isString) = strrep(raw(isString), '*', '');
+
+isString    = cellfun('isclass', raw, 'char'); % remove (
+raw(isString) = strrep(raw(isString), '(', '');
+
+isString    = cellfun('isclass', raw, 'char'); % remove )
+raw(isString) = strrep(raw(isString), ')', '');
+
+isString    = cellfun('isclass', raw, 'char'); % remove /
+raw(isString) = strrep(raw(isString), '/', '');
+
+clear isString
+rawdouble = cellfun(@(x)str2double(x), raw);
+
+[row, col] = find(not(isnan(rawdouble)));
+[j,~] = size(row);
+k=0;
+for i=1:j
+    if isequal(raw(row(i), col(i)-1),{'kg'}) %skip kg entries, due to duplicate variable names
+        k=k+1;
+    else
+        vars(i-k) = raw(row(i), col(i)-1);
+        pars(i-k) = raw(row(i), col(i));
+        uni(i-k) = raw(row(i), col(i)+1);
+    end
+end
+
+pars = cellfun(@(x)str2double(x), pars);
+dat = array2table(pars);
+dat.Properties.VariableNames = vars;
+data = table2struct(dat);
+
+unit = array2table(uni);
+unit.Properties.VariableNames = vars;
+units = table2struct(unit);
+
+clearvars -except data units
