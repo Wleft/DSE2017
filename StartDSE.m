@@ -40,11 +40,13 @@ for i=1:j
     end
 end
 
+% make data structure
 pars = cellfun(@(x)str2double(x), pars);
 dat = array2table(pars);
 dat.Properties.VariableNames = vars;
 data = table2struct(dat);
 
+% make units structure
 unit = array2table(uni);
 unit.Properties.VariableNames = vars;
 units = table2struct(unit);
