@@ -33,6 +33,8 @@ k=0;
 for i=1:j
     if isequal(raw(row(i), col(i)-1),{'kg'}) %skip kg entries, due to duplicate variable names
         k=k+1;
+    elseif not(isnan(rawdouble(row(i), col(i)-1))) % skips 2nd column of numbers if next to each other
+        k=k+1;
     else
         vars(i-k) = raw(row(i), col(i)-1);
         pars(i-k) = raw(row(i), col(i));
