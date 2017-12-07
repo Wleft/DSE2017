@@ -39,14 +39,27 @@ cat = categorical([stationnames;{'Total'}]);
 
 figure
 bar(cat,percentages.')
-title('percentage of hrs with winds below maximums')
+title('Percentage of hrs with winds below maximums')
 legend('Max wind speed','Max gust speed')
 
 
 figure
-title('Average wind speed by the hour')
-boxplot(data.avHspeed,'Labels',stationnames,'PlotStyle','compact')
+title('Wind speeds during the day by the hour from March to November 2017 in the netherlands')
+subplot(2,1,1)
+hold on
+boxplot(data.avHspeed,'PlotStyle','compact')
+set(gca,'XTickLabel',{' '})
+hline = refline([0 maxspeed]);
+hline.Color = 'r';
+ylabel('[m/s]')
+hold off
+title('Average wind speeds')
 
-figure
-title('Highest gust speed by the hour')
+subplot(2,1,2)
+hold on
 boxplot(data.highestGust,'Labels',stationnames,'PlotStyle','compact')
+hline = refline([0 maxgust]);
+hline.Color = 'r';
+ylabel('[m/s]')
+hold off
+title('Highest gust speeds')
