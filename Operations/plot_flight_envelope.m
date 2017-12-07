@@ -85,7 +85,7 @@ else
         if alt>50000*0.3048
             delta_u_ft = [38 25 12.5]; % statistical gust velocity [high angle, cruise, dive]
         elseif alt<20000*0.3048
-            delta_u_ft = [26.25 26.25 26.25]; %[66 50 25];
+            delta_u_ft = [66 50 25];
         else
             delta_u_ft(1)=(66-38)/30000*(alt-20000)+38;
             delta_u_ft(2)=(50-25)/30000*(alt-20000)+25;
@@ -93,8 +93,9 @@ else
         end
         delta_u = delta_u_ft*0.3048; % convert to meter
         
-        u=K*delta_u; % gust velocity
-        V=[V_B V_C V_D]; % Velocty vector
+%         u = K*delta_u; % gust velocity
+        u = K*8; %gust velocity m/s
+        V = [V_B V_C V_D]; % Velocty vector
         delta_N = (rho*V.*u*C_L_alpha)/(2*WS); % load change due to gust
         N_gust(1,:) = 1+delta_N;
         N_gust(2,:) = 1-delta_N;
