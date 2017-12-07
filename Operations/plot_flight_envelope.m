@@ -29,7 +29,7 @@ else
     
     % requirement speed ranges [m/s]
     req_V_stall = [15, 20]/ 1.94384; %knot to m/s
-    req_V_cruise = [34, 40]/ 1.94384;
+    req_V_cruise = [30, 40]/ 1.94384;
     rangereq = 1; % set to 1 to insert speed requirements range bars in plots
     
     % required load factors [g]
