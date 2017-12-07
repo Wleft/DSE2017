@@ -1,5 +1,5 @@
 function []=plot_flight_envelope(CL_max,WS,V_B,V_C,V_D,C_L_alpha,c,option)
-% example input plot_flight_envelope(1.5,700,60,75,90,5.5,1.4,1)
+% example plot_flight_envelope(1.8,110.25,15.24,16,1.25*16,5,0.8)
 % inputs are
 % CL_max; maximum lift coefficient
 % WS; Weight over surface area (wing loading)
