@@ -5,7 +5,7 @@ function []=plot_flight_envelope(CL_max,WS,V_B,V_C,V_D,C_L_alpha,c,option)
 % WS; Weight over surface area (wing loading)
 % V_B; High angle of attack speed
 % V_C; Cruise speed
-% V_S; Dive speed
+% V_D; Dive speed
 % C_L_alpha; Change in lift coefficient by angle of attack
 % c; cord
 % option: graphing options
@@ -85,7 +85,7 @@ else
         if alt>50000*0.3048
             delta_u_ft = [38 25 12.5]; % statistical gust velocity [high angle, cruise, dive]
         elseif alt<20000*0.3048
-            delta_u_ft = [66 50 25];
+            delta_u_ft = [26.25 26.25 26.25]; %[66 50 25];
         else
             delta_u_ft(1)=(66-38)/30000*(alt-20000)+38;
             delta_u_ft(2)=(50-25)/30000*(alt-20000)+25;
